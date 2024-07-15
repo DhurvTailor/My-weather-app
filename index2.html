@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App - Easy Tutorials</title>
+    <link rel="stylesheet" href="style.css">
+  
+</head>
+<body>
+    <div class="card">
+        <div class="search">
+            <input type="text" id="cityInput" placeholder="Enter city name" spellcheck="false">
+            <button id="searchButton"><img src="project img/search.png" alt="search"></button>
+        </div>
+        <div class="weather">
+            <img id="weatherIcon" class="weather-icon" src="project img/rain.png" alt="weather-icon">
+            <h1 class="temp" id="temperature">22°C</h1>
+            <h2 class="city" id="cityName">New York</h2>
+            <div class="details">
+                <div class="col">
+                    <img src="project img/humidity.png" alt="humidity"> 
+                    <div>
+                        <p class="humidity" id="humidity">50%</p>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="project img/wind.png" alt="wind">
+                    <div>
+                        <p class="wind" id="windSpeed">10 km/h</p>
+                        <p>Wind speed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const apiKey = "6275bd37ced271a0a644907380686865"; // Replace with your actual API key
+
+            async function checkWeather(city) {
+                const apiUrl = `https://api.openweathermap.org/data/2.5/weather?units=metric&q=${city}&appid=${apiKey}`;
+                try {
+                    const response = await fetch(apiUrl);
+                    if (!response.ok) {
+                        throw new Error('City not found or unauthorized');
+                    }
+                    const data = await response.json();
+                    console.log(data);
+                    document.getElementById('temperature').textContent = `${data.main.temp}°C`;
+                    document.getElementById('cityName').textContent = data.name;
+                    document.getElementById('humidity').textContent = `${data.main.humidity}%`;
+                    document.getElementById('windSpeed').textContent = `${data.wind.speed} km/h`;
+                    const weatherIcon = document.getElementById('weatherIcon');
+                    weatherIcon.src = `http://openweathermap.org/img/wn/${data.weather[0].icon}.png`;
+                    weatherIcon.alt = data.weather[0].description;
+                } catch (error) {
+                    console.error(error);
+                    alert(error.message);
+                }
+            }
+
+            document.getElementById('searchButton').addEventListener('click', () => {
+                const city = document.getElementById('cityInput').value;
+                if (city) {
+                    checkWeather(city);
+                } else {
+                    alert('Please enter a city name');
+                }
+            });
+        });
+    </script
+</body>
+</html>
